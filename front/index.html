@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>MyTextChat</title>
+</head>
+
+<body>
+    <h1>MyTextChat</h1>
+    <div id="historyFrame" style="border: 2px solid rgba(103, 17, 104, 0.625)">
+        <ul id="chatHistory">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+    <div id="actionFrame" style="border: 2px solid rgba(103, 17, 104, 0.625)">
+        <input id="inputMessage" type="text" maxlength="25" style="width: 250px;"/>
+        <button onclick="sendMessage()" id="sendMessageButton" style="margin: 10px;">Send a message</button>
+    </div>
+    <div id="alertFrame">
+        <div id="alertText" style="margin: 10px;"></div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    // code inspired by 
+    // https://programmersought.com/article/995711536466/
+
+
+    var webSocket;
+    var chatHistoryList = document.getElementById('chatHistory');
+    var sendMessageButton = document.getElementById('sendMessageButton');
+    var inputMessage = document.getElementById('inputMessage');
+    createWebSocket();
+    var errored = false;
+
+
+    function createWebSocket() {
+        // Judging websock support
+        if ('WebSocket' in window) {
+            webSocket = new WebSocket("ws://localhost:8080/websocket");
+            errored = false;
+            console.log("new websocket connection created, here it is:");
+            console.log(webSocket);
+        }
+        else {
+            alert('WebSocket is not supported');
+        }
+
+        webSocket.onerror = function () {
+            console.log("Connection failed");
+            errored = true;
+            var leftTime = 10;
+            let timerId = setInterval(() => {
+                var textField = document.getElementById('alertText');
+                textField.innerHTML = "No connection to server. Reconnecting in " + leftTime + "s.";
+                if (leftTime == 0) {
+                    clearInterval(timerId);
+                    textField.innerHTML = "";
+                    createWebSocket();
+                }
+                leftTime -= 1;
+            }, 1000);
+        };
+
+        webSocket.onopen = function (event) {
+            console.log("Connection succeeded");
+            sendMessageButton.disabled = false;
+            inputMessage.disabled = false;
+        }
+
+
+        webSocket.onmessage = function (event) {
+            console.log("there is a message!");
+            addMessageToChatHistory(event.data);
+        }
+
+
+        webSocket.onclose = function () {
+            console.log("Connection has been closed");
+            for (let elem of chatHistoryList.childNodes) {
+                elem.innerHTML = "";
+            }
+            sendMessageButton.disabled = true;
+            inputMessage.disabled = true;
+            if (!errored) {
+                console.log("connection was closed without error, reconnecting");
+                createWebSocket();
+            }
+        }
+
+    }
+
+
+    function sendMessage() {
+        var message = inputMessage.value;
+        addMessageToChatHistory("[ME]: " + message);
+        console.log("Message: " + message);
+        console.log(webSocket);
+        webSocket.send(message);
+        console.log("Message sent");
+    }
+
+
+    function addMessageToChatHistory(text) {
+        var chatHistoryElem = document.createElement("li");
+
+        if (chatHistoryList.childNodes.length > 9) {
+            chatHistoryList.querySelector('li').remove();
+        }
+
+        chatHistoryElem.appendChild(document.createTextNode(text));
+        chatHistoryList.appendChild(chatHistoryElem);
+
+    }
+
+</script>
+
+</html>

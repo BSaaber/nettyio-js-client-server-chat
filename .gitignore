@@ -1,0 +1,135 @@
+**/target/
+/target/
+*/target/*
+.classpath
+.project
+.settings
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.iml
+*.idea
+javagitgitignore
+Share
+Improve this question
+Follow
+edited Apr 2, 2015 at 8:32
+jub0bs's user avatar
+jub0bs
+63.8k2626 gold badges188188 silver badges191191 bronze badges
+asked Apr 2, 2015 at 4:11
+SaintGeorge's user avatar
+SaintGeorge
+13311 gold badge11 silver badge44 bronze badges
+could anybody share file that he uses himself? – 
+SaintGeorge
+ Apr 2, 2015 at 5:19
+What you are asking is not simply about "Java". It is highly related to the IDE, build tools, setting of tools etc that you are using. – 
+Adrian Shum
+ Apr 2, 2015 at 8:59 
+Just one thing to comment: seems you are using Maven (from the target/). Adding *.jar, *.war, *.ear are superfluous given that in a proper Maven project, such packaged output should be put under target directory. You do not need to exclude them again. – 
+Adrian Shum
+ Apr 2, 2015 at 9:06
+gitignore.io/api/maven,java is what you want. If not, go to gitignore.io and select the IDE/Language combination you need. – 
+eckes
+ Apr 2, 2015 at 10:18 
+Add a comment
+3 Answers
+Sorted by:
+
+Highest score (default)
+Не нашли ответ? Задайте вопрос на Stack Overflow на русском.
+
+26
+
+This .gitignore has other Java-related temp files added -
+
+https://gist.github.com/dedunumax/54e82214715e35439227
+
+##############################
+## Java
+##############################
+.mtj.tmp/
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*
+
+##############################
+## Maven
+##############################
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
+
+##############################
+## IntelliJ
+##############################
+out/
+.idea/
+.idea_modules/
+*.iml
+*.ipr
+*.iws
+
+##############################
+## Eclipse
+##############################
+.settings/
+bin/
+tmp/
+.metadata
+.classpath
+.project
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.factorypath
+
+##############################
+## NetBeans
+##############################
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+##############################
+## Visual Studio Code
+##############################
+.vscode/
+.code-workspace
+
+##############################
+## OS X
+##############################
+.DS_Store
